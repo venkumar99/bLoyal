@@ -1,0 +1,75 @@
+/**
+ * Sample business network definition.
+ */
+/**
+ * Definition of a Bond, based on the FpML schema:
+ * http://www.fpml.org/spec/fpml-5-3-2-wd-2/html/reporting/schemaDocumentation/schemas/fpml-asset-5-3_xsd/elements/bond.html
+ *
+ */
+namespace org.bloyal.loyalty
+
+asset Blcoin identified by blcoinId {
+  o String blcoinId
+  o String description
+  o Double value_usd
+}
+
+enum LoyaltyType {
+  o AmericanAAdvantage
+  o DeltaSkyMiles
+  o UnitedMileagePlus
+  o SouthWestRapidRewards
+}
+asset CustomerLoyaltyPoint identified by lpoint{
+  o String lpoint
+  --> Issuer issuerId
+  --> Customer customer
+  o Integer Quantity
+  o DateTime timestamp
+}
+concept Address {
+  o String AddressLine1
+  o String AddressLine2
+  o String City
+  o String State
+  o String Country
+  o String Zip
+}
+
+participant Customer identified by customerId {
+  o String customerId
+  o String firstName
+  o String lastName
+  o Address customerAddress
+}
+
+participant RetailPartner identified by retailerId {
+  o String retailerId
+  o String retailerName
+  o String url
+  o Address retailerAddress
+}
+
+participant Issuer identified by issuerId {
+  o String issuerId
+  o  LoyaltyType type
+  o String issuerName
+  o String url
+  o Address issuerAddress
+}
+
+transaction issuePoints identified by transactionId{
+  o String transactionId
+  o LoyaltyType type
+  --> Issuer issuerId
+  --> Customer customer
+  o Integer quantity
+}
+
+transaction redeemPoints identified by transactionId{
+ o String transactionId
+ o String ltype
+  --> Issuer issuer
+  --> Customer customer
+  o Integer quantity
+}
